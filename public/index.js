@@ -17,6 +17,16 @@ var cars = [{
   'pricePerKm': 0.45
 }];
 
+/*
+function convertDate(str){
+	var re = /[0-9]+/g;
+	var result = re[Symbol.match](str);
+	
+	var dateLoc = new Date(result(0), result(1), result(2));
+	return dateLoc;
+}
+*/
+
 //list of rentals
 //useful for ALL exercises
 //The `price` is updated from exercice 1
@@ -91,7 +101,6 @@ function getDays(beginDate, returnDate)
 	return nbDays;
 }
 
-//Exercise 1
 function calculatePrice(rentals)
 {
 	var nbCars = cars.length;
@@ -107,13 +116,37 @@ function calculatePrice(rentals)
 			pricePK = cars[i].pricePerKm;
 		}
 	}
-	var price = (nbDay * pricePD) + (nbKm * pricePK);
+	
+	// Exercise 2
+	var priceDay;
+	var ppd1 = pricePD - (0.1*pricePD);
+	var ppd4 = pricePD - (0.3*pricePD);
+	var ppd10 = pricePD - (0.5*pricePD);
+	
+	if(nbDay = 1)
+	{
+		priceDay = pricePD;
+	}
+	else if(nbDay >1 && nbDay<=4)
+	{
+		priceDay = pricePD + ((nbDay-1) * ppd1);
+	}
+	else if(nbDay>4 && nbDay<=10)
+	{
+		priceDay = pricePD + (3 * ppd1) + ((nbDay-4) * ppd4);
+	}
+	else if(nbDay > 10) 
+	{
+		priceDay = pricePD + (3 * ppd1) + (6 * ppd4) + ((nbDay-10) * ppd10);
+	}
+	
+	var price = priceDay + (nbKm * pricePK);
 	return price;
 }
 
+// update
 for(var i=0; i<3; i++)
 {
-	//update price in rentals
 	rentals[i].price = calculatePrice(rentals[i]);
 }
 
