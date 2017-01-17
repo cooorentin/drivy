@@ -81,6 +81,42 @@ var rentals = [{
   }
 }];
 
+function getDays(beginDate, returnDate)
+{
+	var begin = new Date(beginDate).getTime();
+	var end = new Date(returnDate).getTime()
+	
+	//convert in days
+	var nbDays = ((end - begin)/86400000)+1; 
+	return nbDays;
+}
+
+//Exercise 1
+function calculatePrice(rentals)
+{
+	var nbCars = cars.length;
+	var pricePD;
+	var pricePK;
+	var nbDay = getDays(rentals.pickupDate,rentals.returnDate);
+	var nbKm = rentals.distance;
+	for(var i=0; i<nbCars; i++)
+	{
+		if(rentals.carId == cars[i].id)
+		{
+			pricePD = cars[i].pricePerDay;
+			pricePK = cars[i].pricePerKm;
+		}
+	}
+	var price = (nbDay * pricePD) + (nbKm * pricePK);
+	return price;
+}
+
+for(var i=0; i<3; i++)
+{
+	//update price in rentals
+	rentals[i].price = calculatePrice(rentals[i]);
+}
+
 //list of actors for payment
 //useful from exercise 5
 var actors = [{
@@ -168,4 +204,4 @@ var rentalModifications = [{
 console.log(cars);
 console.log(rentals);
 console.log(actors);
-console.log(rentalModifications);
+console.log(rentalModifications)
