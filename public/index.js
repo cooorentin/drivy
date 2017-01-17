@@ -140,6 +140,8 @@ function calculatePrice(rentals)
 	}
 	
 	var price = priceDay + (nbKm * pricePK);
+	var deductOption = 4 * parseInt(nbDay);
+	
 	return price;
 }
 
@@ -148,11 +150,10 @@ for(var i=0; i<3; i++)
 	rentals[i].price = calculatePrice(rentals[i]);
 }
 
-// Exercise 3
 function calculateCommission(rental)
 {
 	var rentalPrice = rental.price;
-	var commission = (0.3)*rentalPrice;
+	var commission = ((0.3)*rentalPrice) + addDeductibleCharges(rental);
 	var insurance = commission/2;
 	var nbDay = getDays(rental.pickupDate,rental.returnDate);
 	var assistance = nbDay; // 1€ per day 
@@ -163,10 +164,27 @@ function calculateCommission(rental)
 	rental.commission.drivy = drivy;
 }
 
-// update
 for(var i=0; i<3; i++)
 {
 	calculateCommission(rentals[i]);
+}
+
+function addDeductibleCharges(rentals)
+{
+	var nbDay = getDays(rentals.pickupDate,rentals.returnDate);
+	var charges = 0;
+	
+	if(rentals.options.deductibleReduction == true)
+	{
+		charges = 4 * nbDay ;
+		rentals.price += charges;
+	}
+	return charges; 
+}
+
+for(var i=0; i<3; i++)
+{
+	addDeductibleCharges(rentals[i]);
 }
 
 //list of actors for payment
