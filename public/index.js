@@ -153,7 +153,7 @@ for(var i=0; i<3; i++)
 function calculateCommission(rental)
 {
 	var rentalPrice = rental.price;
-	var commission = ((0.3)*rentalPrice) + addDeductibleCharges(rental);
+	var commission = ((0.3)*rentalPrice) + deductCharges(rental);
 	var insurance = commission/2;
 	var nbDay = getDays(rental.pickupDate,rental.returnDate);
 	var assistance = nbDay; // 1€ per day 
@@ -172,12 +172,22 @@ for(var i=0; i<3; i++)
 function addDeductibleCharges(rentals)
 {
 	var nbDay = getDays(rentals.pickupDate,rentals.returnDate);
+	var charges = 4 * nbDay ;
+	
+	if(rentals.options.deductibleReduction == true)
+	{
+		rentals.price += charges;
+	}
+}
+
+function deductCharges(rentals)
+{
+	var nbDay = getDays(rentals.pickupDate,rentals.returnDate);
 	var charges = 0;
 	
 	if(rentals.options.deductibleReduction == true)
 	{
 		charges = 4 * nbDay ;
-		rentals.price += charges;
 	}
 	return charges; 
 }
@@ -259,6 +269,38 @@ var actors = [{
     'amount': 0
   }]
 }];
+
+function payActors(actors)
+{
+	var nbRentals = rentals.length;
+	var amountDriver;
+	var amountOwner;
+	var amountInsurance;
+	var amountAssistance;
+	var amountDrivy;
+	
+	for(var j=0; j<nbRentals; j++)
+	{
+		if(actors.rentalId == rentals[j].id)
+		{
+			amountDriver = rentals[j].price;
+			amountInsurance = rentals[j].commission.insurance;
+			amountAssistance = rentals[j].commission.assistance;
+			amountDrivy = rentals[j].commission.drivy;
+			amountOwner = rentals[j].price - amountInsurance - amountAssistance - amountDrivy;
+		}
+	}
+	actors.payment[0].amount = amountDriver;
+	actors.payment[1].amount = amountOwner;
+	actors.payment[2].amount = amountInsurance;
+	actors.payment[3].amount = amountAssistance;
+	actors.payment[4].amount = amountDrivy;
+}
+
+for(var j=0; j<3; j++)
+{
+	payActors(actors[j]);
+}
 
 //list of rental modifcation
 //useful for exercise 6
