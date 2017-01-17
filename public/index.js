@@ -116,8 +116,7 @@ function calculatePrice(rentals)
 			pricePK = cars[i].pricePerKm;
 		}
 	}
-	
-	// Exercise 2
+	// à vérifier
 	var priceDay;
 	var ppd1 = pricePD - (0.1*pricePD);
 	var ppd4 = pricePD - (0.3*pricePD);
@@ -129,25 +128,45 @@ function calculatePrice(rentals)
 	}
 	else if(nbDay >1 && nbDay<=4)
 	{
-		priceDay = pricePD + ((nbDay-1) * ppd1);
+		priceDay = pricePerDay + ((nbDay-1) * ppd1);
 	}
 	else if(nbDay>4 && nbDay<=10)
 	{
-		priceDay = pricePD + (3 * ppd1) + ((nbDay-4) * ppd4);
+		priceDay = pricePerDay + (3 * ppd1) + ((nbDay-4) * ppd4);
 	}
 	else if(nbDay > 10) 
 	{
-		priceDay = pricePD + (3 * ppd1) + (6 * ppd4) + ((nbDay-10) * ppd10);
+		priceDay = pricePerDay + (3 * ppd1) + (6 * ppd4) + ((nbDay-10) * ppd10);
 	}
 	
 	var price = priceDay + (nbKm * pricePK);
 	return price;
 }
 
-// update
 for(var i=0; i<3; i++)
 {
 	rentals[i].price = calculatePrice(rentals[i]);
+}
+
+// Exercise 3
+function calculateCommission(rental)
+{
+	var rentalPrice = rental.price;
+	var commission = (0.3)*rentalPrice;
+	var insurance = commission/2;
+	var nbDay = getDays(rental.pickupDate,rental.returnDate);
+	var assistance = nbDay; // 1€ per day 
+	var drivy = commission - (insurance + assistance);
+	
+	rental.commission.insurance = insurance;
+	rental.commission.assistance = assistance;
+	rental.commission.drivy = drivy;
+}
+
+// update
+for(var i=0; i<3; i++)
+{
+	calculateCommission(rentals[i]);
 }
 
 //list of actors for payment
